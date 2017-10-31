@@ -1,0 +1,169 @@
+{% extends 'index.html' %}
+{% load maketemplates %}
+{% block title %}人员管理{% endblock %}
+{% block head %}{% endblock %}
+{% block css %}
+<style>
+.required{color: red;font-size: 15px}
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>{{ page_obj.name }}-{{ library_obj.name }} <small></small></h3>
+                  {% csrf_token %}
+              </div>
+              <div class="clearfix"></div>
+              <div class="row">
+                <div class="clearfix"></div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>{{ title }}<small></small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                              <li>
+                              </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="col-md-6 col-sm-9 col-xs-12">
+                                <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                                    <input type="hidden" name="pl_id" value="{{ library_id }}">
+                                    <input type="hidden" name="ppl_id" value="{{ page_id }}">
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">姓名
+                                        <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-3 col-sm-3 col-xs-6">
+                                      {{ obj.name }}
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-6">
+                                      {{ obj.ename }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">公司名称
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.company }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">职位名称
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.position }}
+                                    </div>
+                                  </div>
+                                    <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">权重排序
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.weight }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">头像上传
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.pic }}
+                                      <span style="margin-top: 5px;color: red">注：文件限制 30kb以内，尺寸 140*145 px</span>
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">嘉宾简介
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.summary }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group"><hr></div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">演讲专场
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.meet }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">演讲主题
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.stheme }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">日期时间
+                                    </label>
+                                    <div class="col-md-3 col-sm-3 col-xs-6">
+                                      {{ obj.sdata }}
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-6">
+                                      {{ obj.stime }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">演讲地址
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.meetaddr }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">演讲内容
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.sintroduce }}
+                                    </div>
+                                  </div>
+
+                                  <div class="ln_solid"></div>
+                                  <div class="form-group">
+                                    <div class="col-md-6 col-md-offset-3">
+                                      <a type="submit" class="btn btn-primary" href="/gitcadmin/page/{{ page_id }}/index.html">返回列表</a>
+                                      <input id="mysubmit"  type="submit" class="btn btn-success"  value="提交数据">
+                                    </div>
+                                  </div>
+                                </form>
+
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                <div class="alert alert-success" role="alert">
+                                    <ul>
+                                        <li>姓名必须填写，全拼系统会自动生成；</li>
+                                        <li>公司名称与职位如果页面需要请填写内容；</li>
+                                        <li>新建图片，必须上传！修改可以不填写！</li>
+                                    </ul>
+                                </div>
+
+                                {% if self.error %}
+                                 <div class="alert alert-danger" role="alert">
+                                    <ul>
+                                        {% for foo in self.error %}
+                                        <li>{{ foo.msg | safe }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                 {% else %}
+                                    <div style="margin: 3px 5px;">图片预览</div>
+                                    {% if not persion_info_dict.pic %}
+                                    <img src="/static/gitc/cx.jpg" class="img-thumbnail" style="max-width: 700px;max-height: 200px">
+                                    {% else %}
+                                    <img src="{{ persion_info_dict.pic }}" class="img-thumbnail" style="max-width: 700px;max-height: 200px">
+                                    {% endif %}
+
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+</div>
+
+{% endblock %}

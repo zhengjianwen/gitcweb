@@ -1,0 +1,82 @@
+{% extends 'gitc/index.html' %}
+{% block title %}修改密码{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>修改密码 <small></small></h3>
+              </div>
+
+              <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">搜索</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+
+              <div class="clearfix"></div>
+
+              <div class="clearfix"></div>
+
+              <div class="col-md-4 col-sm-4 col-xs-6">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>修改密码 <small>{{ user }}</small></h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                          <form class="form-horizontal" method="post">
+                              {% if oldpassword_is_wrong %}
+                                    <div class="alert alert-error">
+                                        <button type="button" class="close" data-dismiss="alert">×</button>
+                                        <h4>错误!</h4>{{ errmsg }}
+                                    </div>
+                              {% endif %}
+
+                              <div class="form-group">
+                                <label for="inputEmail3" class="col-sm-2 control-label">原密码</label>
+                                <div class="col-sm-10">
+                                  {{ obj.oldpassword }}
+                                </div>
+                              </div>
+                              <div class="form-group">{% csrf_token %}
+                                <label for="inputPassword3" class="col-sm-2 control-label">新密码</label>
+                                <div class="col-sm-10">
+                                  {{ obj.newpassword1 }}
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label for="inputPassword3" class="col-sm-2 control-label">确认密码</label>
+                                <div class="col-sm-10">
+                                  {{ obj.newpassword2 }}
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                  <input type="submit" class="btn btn-success" value="确认修改">
+                                </div>
+                              </div>
+                            </form>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+{% endblock %}

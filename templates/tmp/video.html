@@ -1,0 +1,62 @@
+<div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2><i class="fa fa-video-camera"></i>  {{ library_id }}-{{ name }}</h2>
+          <div style="display: inline-block;margin-left: 20px">
+                <a type="button" class="btn btn-success btn-sm" href="/gitcadmin/video-{{ page_id }}/{{ library_id }}/edit/0">添加视频</a>
+            </div>
+          <ul class="nav navbar-right panel_toolbox">
+            <li><a class="collapse-link" status="0"><i class="fa fa-chevron-down">展开</i></a>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                  <i class="fa fa-unlink">接口地址</i></a>
+              <ul class="fa dropdown-menu" role="menu">
+                  <li style="padding: 10px ;width: 300px">所属页面ID：{{ page_id }}  所属栏目ID：{{ library_id }}</li>
+                  <li style="padding: 10px ;width: 300px">name：标题  url：视频地址</li>
+                  <li style="padding: 10px;color: #00A000">将以上代码发生前端生成！</li>
+              </ul>
+            </li>
+            <li><a class="close-link"><i class="fa fa-close">关闭</i></a>
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content" style="display: none;">
+            <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
+                <thead>
+                    <tr role="row" class="text-center">
+                        <th class="sorting_disabled text-center" rowspan="1" colspan="1" aria-label="" style="width: 60px;">编号</th>
+                        <th class="sorting text-center" aria-controls="datatable-checkbox" style="width: 80px;vertical-align:middle">标题</th>
+                        <th class="sorting text-center" aria-controls="datatable-checkbox" style="width: 80px;vertical-align:middle">权重</th>
+                        <th class="sorting text-center" aria-controls="datatable-checkbox" style="width: 80px;vertical-align:middle">视频地址</th>
+                        <th class="sortingtext-center" aria-controls="datatable-checkbox" style="width: 100px;vertical-align:middle">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for foo in data_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ foo.name }}</td>
+                        <td>{{ foo.weight }}</td>
+                        <td><a href="{{ foo.url }}" target="_blank">点击播放</a></td>
+                        <td>
+                            <a href="/gitcadmin/video-{{ page_id }}/{{ library_id }}/edit/{{ foo.id }}">
+                                <i class="fa fa-edit"></i> 编辑
+                                <span class="text-muted"></span>
+                            </a>
+                            <a href="/gitcadmin/video/{{ page_id }}/del/{{ foo.id }}">
+                                <i class="fa fa-close"></i> 删除
+                                <span class="text-muted"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+
+        </div>
+      </div>
+</div>

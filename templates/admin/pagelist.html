@@ -1,0 +1,149 @@
+{% extends 'index.html' %}
+{% load maketemplates %}
+{% block title %}页面管理{% endblock %}
+
+{% block head %}{% endblock %}
+{% block css %}
+<link href="/static/css/page.css">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>页面设置  <small></small></h3>
+                  {% csrf_token %}
+              </div>
+              <div class="clearfix"></div>
+              <div class="row">
+                <div class="clearfix"></div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>{{ obj.name }} ID：{{ cid }}<small></small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                              <li>
+                              </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                {% for row in library_list %}
+                                    {% if row.plugin.table == 'Imgs' %}
+                                        {% makeimg request obj.id row.id row.name %}
+                                    {% elif  row.plugin.table == 'Video' %}
+                                        {% makevideo request obj.id row.id row.name %}
+                                    {% elif row.plugin.table == 'Article' %}
+                                        {% makearticle request obj.id row.id row.name %}
+                                    {% elif row.plugin.table == 'Personnel' %}
+                                        {% makepersonnel request obj.id row.id row.name %}
+                                    {% elif row.plugin.table == 'Html' %}
+                                        {% makehtml request obj.id row.id row.name %}
+                                    {% elif row.plugin.table == 'Files' %}
+                                        {% makefile request obj.id row.id row.name %}
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                  <div class="x_panel">
+                                    <div class="x_title">
+                                      <h2><i class="fa fa-eye"></i> 页面模块</h2>
+                                      <ul class="nav navbar-right panel_toolbox">
+                                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                        </li>
+                                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                                        </li>
+                                      </ul>
+                                      <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content" style="display: block;">
+                                        <div class="row">
+                                          <div class="col-xs-12 col-md-12">
+                                            <a href="#" class="thumbnail" style="width: auto;height: 100%">
+                                              <img src="{{ obj.pp.img }}" alt="效果页面获取失败！地址不正确">
+                                            </a>
+                                          </div>
+
+                                        </div>
+
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" id="myModal" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">确认删除吗？</h4>
+        </div>
+        <div class="modal-body">
+            {% for domain in domain_list %}
+                {% for foo in domain.pagetemplate_set.all %}
+                    {% if forloop.counter == 1 %}
+                        <img cid="{{ foo.id }}" src="/static/upload/{{ foo.img }}" width="100%"  alt="">
+                        {% else %}
+                        <img cid="{{ foo.id }}" class="hide" src="/static/upload/{{ foo.img }}" width="100%"  alt="">
+                    {% endif %}
+
+                {% endfor %}
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block js %}
+    <script src="/static/js/md5.js"></script>
+    <script>
+        function delperson(cid) {
+            var that = $('#person'+cid).parent().parent().parent();
+            $.ajax({
+                url:'/gitcadmin/personnel/{{ cid }}/del/'+cid,
+                type:'GET',
+                dataType:'JSON',
+                success:function (arg) {
+                    if (arg.status){
+                        that.remove();
+                        alert('删除成功！')
+                    }else {
+                        alert(arg.msg)
+                    }
+                }
+            })
+        }
+
+        $('.collapse-link').click(function () {
+            var status = $(this).attr('status');
+            if (status == 0){
+                $(this).attr('status',1);
+                $(this).find('i').text('关闭')
+            }else {
+                $(this).attr('status',0);
+                $(this).find('i').text('展开')
+            }
+        })
+    </script>
+{% endblock %}

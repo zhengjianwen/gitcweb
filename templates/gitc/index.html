@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}GITC{% endblock %}
+
+{% block changpwd %}<a href="/gitcadmin/changepwd.html"> 修改密码</a>{% endblock %}
+
+{% block caidan %}
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>GITC管理区</h3>
+                <ul class="nav side-menu">
+                  <li><a href="/gitcadmin/inde.html">
+                      <i class="fa fa-home"></i>
+                      后台主页</a>
+
+                  </li>
+                  <li><a><i class="fa fa-edit"></i> 页面管理 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="/gitcadmin/page/add.html">添加页面</a></li>
+
+                    </ul>
+                  </li>
+                    {% for foo in dm %}
+                    <li><a><i class="fa fa-desktop"></i>{{ foo.name }}<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        {% for yh in foo.pagetemplate_set.all %}
+                             <li><a href="/gitcadmin/domain/{{ yh.id }}/index.html">{{ yh.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                  </li>
+                    {% endfor %}
+                  <li><a href="/gitcadmin/contact.html"><i class="fa fa-bar-chart-o"></i>加入我们</a>
+
+                  </li>
+                </ul>
+              </div>
+            </div>
+{% endblock %}
+
+{% block head %}
+          <!-- 头部数据 -->
+          <div class="row tile_count">
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top">
+                  <i class="fa fa-user"></i>提交用户数</span>
+              <div class="count">{{ yhs }}</div>
+
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> 购票人数 </span>
+              <div class="count">{{ goupiao }}</div>
+              <span class="count_bottom"><i class="green">
+
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> 收费总额</span>
+              <div class="count green">{{ shoufei }}</div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> 嘉宾数量 </span>
+              <div class="count">{{ jiabin }}</div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> 会议数量 </span>
+              <div class="count">{{ meets }}</div>
+
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> 图片数量合计 </span>
+              <div class="count">{{ tp }}</div>
+            </div>
+          </div>
+          <!-- 头部数据结束 -->
+        {% endblock %}
+
+{% block content %}
+          <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>加入我们<small>月度数量对比</small></h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                      <iframe class="chartjs-hidden-iframe" style="width: 100%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"></iframe>
+                      <canvas id="lineChart" width="761" height="380" style="width: 761px; height: 380px;"></canvas>
+                  </div>
+                </div>
+              </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2><font><font>馅饼面积图</font></font><small><font><font>会议</font></font></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content"><iframe class="chartjs-hidden-iframe" style="width: 100%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"></iframe>
+                    <canvas id="polarArea" width="761" height="380" style="width: 761px; height: 380px;"></canvas>
+                  </div>
+                </div>
+              </div>
+
+          </div>
+
+            {% endblock %}

@@ -1,0 +1,210 @@
+{% extends 'index.html' %}
+{% load maketemplates %}
+{% block title %}票务编辑{% endblock %}
+
+{% block head %}{% endblock %}
+{% block css %}
+<style>
+    .th{text-align: center;vertical-align: middle;}
+    .td{text-align: center;vertical-align: middle;}
+    .tr{text-align: center;vertical-align: middle;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>{{ page_obj.name }}-{{ library_obj.name }} <small></small></h3>
+                  {% csrf_token %}
+              </div>
+              <div class="clearfix"></div>
+              <div class="row">
+                <div class="clearfix"></div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>编辑用户{{ bill_dic.name }} - {{ bill_dic.order_nub }} 订单<small></small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                              <li>
+                              </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+
+                                    <input type="hidden" name="bd_id" value="{{ bill_dic.bd_id }}">
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">签到码
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      <span style="line-height: 35px;font-size: 16px;">{{ bill_dic.code }}</span>
+                                        {{ obj.code }}
+                                        {{ obj.order_nub }}
+                                        {{ obj.order_time }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">订单时间
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        <span style="line-height: 35px;font-size: 16px;">{{ bill_dic.order_time }}</span>
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-6">门票类型
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-3">
+                                      {{ bill_obj.first.bt }}
+                                    </div>
+                                  </div>
+                                    <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">价格
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-3" value="{{ bill_dic.ticket }}">
+                                      {{ obj.price }}
+                                    </div>
+                                  </div>
+
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">购买渠道
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.channel }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">签到信息
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      <span style="line-height: 35px;font-size: 16px;">
+                                        {{ bill_obj.first.get_sign_staus_display }}
+                                          {% if bill_dic.sign_staus == 1 %}
+                                            时间：{{ bill_dic.sign_time }}
+                                          {% endif %}
+                                      </span>
+                                    </div>
+                                  </div>
+                                    <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">备注
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.remarks }}
+                                    </div>
+                                  </div>
+                                <hr >
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">手机号
+                                        <span style="color: red">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.phone }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">姓名
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.name }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">性别
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ uobj.sex }}
+                                    </div>
+                                  </div>
+                                 <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">年龄
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ uobj.age }}
+                                    </div>
+                                  </div>
+                                <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">邮箱
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ uobj.email }}
+                                    </div>
+                                  </div>
+                                <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">公司名称
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ uobj.company }}
+                                    </div>
+                                  </div>
+                                <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">职位
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ uobj.position }}
+                                    </div>
+                                </div>
+                                  <div class="ln_solid"></div>
+                                  <div class="form-group">
+                                    <div class="col-md-6 col-md-offset-3">
+                                      <a type="submit" class="btn btn-primary" href="/gitcadmin/bill.html">返回列表</a>
+                                      <input type="submit"  class="btn btn-success" value="提交数据">
+                                    </div>
+                                  </div>
+                                </form>
+
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                <div class="alert alert-success" role="alert">
+                                    <ul>
+                                        <li>签到状态，只能是验证票务才会改变！</li>
+                                        <li>文字最大为256字；</li>
+
+                                    </ul>
+                                </div>
+
+                                {% if error %}
+                                 <div class="alert alert-danger" role="alert">
+                                    <ul>
+                                        {% for foo in self.error %}
+                                        <li>{{ foo.msg }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+$(function() {
+    $("#id_ticket").find("option").each(function () {
+        var val = $(this).text();
+        var data = $("#id_ticket").parent().attr("value")
+        if (val == data) {
+            $(this).attr("selected", true)
+        } else {
+            $(this).attr("selected", false)
+        }
+    })();
+});
+
+
+</script>
+
+
+{% endblock %}

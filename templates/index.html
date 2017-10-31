@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load maketemplates %}
+{% block title %}GITC{% endblock %}
+{% block css %}
+<style>
+    .panel-qxxt{font-size: 16px;color: #0f0f0f;list-style:decimal;font-family:'Microsoft YaHei';font-style: normal;}
+</style>
+{% endblock %}
+
+{% block changpwd %}<a href="/gitcadmin/changepwd.html"> 修改密码</a>{% endblock %}
+
+{% block caidan %}
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <ul class="nav side-menu">
+                  <li><a href="/gitcadmin/index.html">
+                      <i class="fa fa-home"></i>后台主页
+                      </a>
+                  </li>
+
+                    {% for foo in domain_list %}
+                            {% bt foo %}
+                            <ul class="nav child_menu">
+                                {% for yh in foo.pagetemplate_set.all %}
+                                    {% for p in yh.page_set.all %}
+                                        <li><a href="/gitcadmin/page/{{ p.id }}/index.html">{{ p.name }}</a></li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                          </li>
+                    {% endfor %}
+                <li><a href="/gitcadmin/page/add.html"><i class="fa fa-plus"></i>添加页面</a>
+                <li><a><i class="fa fa-edit"></i> 信息中心 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                       <li><a href="/gitcadmin/contact.html"><i class="fa fa-university"></i>加入我们</a></li>
+                        <li><a href="/gitcadmin/sponsor.html"><i class="fa fa-thumbs-o-up"></i>赞助列表</a></li>
+                        <li><a href="/gitcadmin/meetissue.html"><i class="fa fa-book"></i>议题列表</a></li>
+                        <li><a href="/gitcadmin/memberlist.html"><i class="fa fa-user"></i>会员管理</a></li>
+                        <li><a href="/gitcadmin/bill.html"><i class="fa fa-barcode"></i>票务信息</a></li>
+                    </ul>
+                  </li>
+                   <!--<li><a><i class="fa fa-edit"></i> 邮件设置 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="/gitcadmin/eamil-type/index.html">1.邮件组</a></li>
+                      <li><a href="/gitcadmin/email/index.html">2.邮件账户</a></li>
+
+                    </ul>
+                  </li>
+                  -->
+                  <li><a><i class="fa fa-edit"></i> 系统设置 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="/gitcadmin/domain/index.html">1.网站设置</a></li>
+                      <li><a href="/gitcadmin/template/index.html">2.模板设置</a></li>
+                      <li><a href="/gitcadmin/library/index.html">3.插件管理</a></li>
+                      <li><a href="/gitcadmin/page/index.html">4.页面管理</a></li>
+                      <li><a href="/gitcadmin/file/index.html">5.文件管理</a></li>
+                      <li><a href="/gitcadmin/ticket/index.html">6.票务管理</a></li>
+                    </ul>
+                  </li>
+                  </li>
+                </ul>
+              </div>
+            </div>
+{% endblock %}
+
+{% block head %}
+          <!-- 头部数据 -->
+          <div class="row tile_count">
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top">
+                  <i class="fa fa-user"></i> 提交用户数</span>
+              <div class="count">{{ yhs }}</div>
+
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> 购票人数 </span>
+              <div class="count">{{ goupiao }}</div>
+              <span class="count_bottom"><i class="green">
+
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> 收费总额</span>
+              <div class="count green">{{ shoufei }}</div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> 嘉宾数量 </span>
+              <div class="count">{{ jiabin }}</div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> 页面数量 </span>
+              <div class="count">{{ page }}</div>
+
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+              <span class="count_top"><i class="fa fa-user"></i> 图片数量合计 </span>
+              <div class="count">{{ tp }}</div>
+            </div>
+          </div>
+          <!-- 头部数据结束 -->
+        {% endblock %}
+
+{% block content %}
+          <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    <h2 style="font-style:normal ">后台使用说明</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="panel-body">
+                        <div>
+                        <ul class="panel-qxxt">
+                            {% for a in web %}
+                                <li>{{ a }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    <h2 style="font-style:normal ">接口使用说明书</h2>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="panel-body">
+                    <div>
+                        <ul class="panel-qxxt">
+                            {% for a in api %}
+                                <li>{{ a }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+          </div>
+
+            {% endblock %}

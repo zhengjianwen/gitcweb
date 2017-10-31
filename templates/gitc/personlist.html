@@ -1,0 +1,129 @@
+{% extends 'gitc/index.html' %}
+{% block title %}嘉宾管理{% endblock %}
+
+{% block head %}{% endblock %}
+{% block css %}
+    <style>
+        .contents .ibox-content {
+                padding-left: 0;
+                margin-right: 15px;
+            }
+        .row {margin-left: -10px;}
+        .person {
+                width: 200px;
+                padding-left: 15px;
+                padding-right: 15px;
+                position: relative;
+                float: left;
+            }
+        .panel {border-color: #dddddd;  }
+        .panel {
+                margin-bottom: 20px;
+                background-color: #ffffff;
+                border: 1px solid #f4f4f4;
+                border-radius: 4px;
+                -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+            }
+        .person .name { padding: 5px; text-align: center; }
+        .panel-default>.panel-heading {
+                    color: #333;
+                    background-color: #f5f5f5;
+                    border-color: #ddd;
+                }
+        .person .panel-body {text-align: center;  }
+        .panel-body {padding: 15px;  }
+        .person img {width: 112px;height: 112px; }
+        img {vertical-align: middle; }
+    .person .panel-footer {padding: 5px;text-align: center;}
+    .panel-footer {
+        padding: 10px 15px;
+        background-color: #f5f5f5;
+        border-top: 1px solid #dddddd;
+        border-bottom-right-radius: 3px;
+        border-bottom-left-radius: 3px;
+    }
+    .left{margin-left: 10px}
+
+    </style>
+
+{% endblock %}
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>嘉宾管理 <small></small></h3>
+              </div>
+
+              <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">搜索</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+
+              <div class="clearfix"></div>
+
+              <div class="clearfix"></div>
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>所有嘉宾列表 <small></small></h2>
+                      <div class="dt-buttons btn-group" style="margin-left: 30px;">
+                            <a type="button"  class="btn btn-success" href="/gitcadmin/person/edit_user">添加嘉宾</a>
+                            <a type="button"  class="btn btn-success left" href="/gitcadmin/person/importuser">批量导入</a>
+                        </div>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                        <div class="col-lg-12 contents">
+				            <div class="ibox float-e-margins">
+					            <div class="ibox-content row">
+                                    {% for person in person_list %}
+                                     <div class="person">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading name">{{ person.cname }} <br> {{ person.company }}</div>
+                                            <div class="panel-body"><img src="{{ person.pic }}"></div>
+                                            <div class="panel-footer">
+                                                <a href="/gitcadmin/person/edit_user?cid={{ person.id }}">编辑</a>
+                                                <a href="/gitcadmin/person/del_user?cid={{ person.id }}" onclick="del({{ person.id }})">删除</a>
+                                            </div>
+                                        </div>
+                                     </div>
+                                    {% endfor %}
+					            </div>
+				            </div>
+			            </div>
+
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+
+
+
+{% endblock %}
+
+{% block js %}
+    <script></script>
+
+{% endblock %}

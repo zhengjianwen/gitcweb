@@ -1,0 +1,166 @@
+{% extends 'index.html' %}
+{% load maketemplates %}
+{% block title %}页面管理{% endblock %}
+
+{% block head %}{% endblock %}
+{% block css %}
+<style>
+    th{vertical-align: middle!important;text-align: center}
+    td{vertical-align: middle!important;text-align: center}
+    .red{color: red;}
+    .green{color: green;}
+    a:hover{color: red}
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>页面管理 <small></small></h3>
+                  {% csrf_token %}
+              </div>
+              <div class="clearfix"></div>
+              <div class="row">
+                <div class="clearfix"></div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>所有页面列表<small style="margin-left: 20px;">
+                                <a type="button" class="btn btn-success" href="/gitcadmin/page/add.html">添加页面</a></small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <table class="table table-hover">
+                                      <thead>
+                                        <tr>
+                                          <th>所属网站</th>
+                                          <th>使用模板</th>
+                                          <th>页面名称</th>
+                                          <th>链接地址</th>
+                                          <th>操作</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                      {% for page in page_list %}
+                                             <tr>
+                                               <th>{{ page.pp.domain.name }}</th>
+                                               <td>{{ page.pp.name }}</td>
+                                               <td><a href="/gitcadmin/page/{{ page.id }}/index.html">{{ page.name }}</a></td>
+                                               <td><a href="{{ page.url }}" target="_blank">{{ page.url }}</a></td>
+                                               <td>
+                                                   <a href="javascript:void (0);" class="myedit" cid="{{ page.id }}">
+                                                           <i class="fa fa-edit"></i> 编辑<span class="text-muted"></span>
+                                                      </a>
+                                                      <a href="javascript:void (0);" class="mysave hidden" pp="{{ page.pp.id }}" cid="{{ page.id }}">
+                                                           <i class="fa fa-save"></i> 保存<span class="text-muted"></span>
+                                                      </a>
+                                                      <a href="javascript:void (0);" class="del" cid="{{ page.id }}" pp="{{ page.pp.id }}" data-toggle="modal" data-target=".bs-example-modal-sm">
+                                                           <i class="fa fa-close"></i> 删除<span class="text-muted"></span>
+                                                      </a>
+                                               </td>
+                                        </tr>
+                                      {% endfor %}
+                                      </tbody>
+
+                                </table>
+                            {% csrf_token %}
+                            </div>
+                            {% if error %}
+                             <div class="col-md-4 col-sm-4 col-xs-12">
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                             </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" id="myModel" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+
+     <div class="panel panel-danger">
+          <div class="panel-heading">
+            <h3 class="panel-title">警告</h3>
+          </div>
+          <div class="panel-body">
+              <p></p>
+              <h3>你确认删除此数据吗？</h3>
+              <p></p>
+          </div>
+         <div class="panel-footer">
+            <button type="button" class="btn btn-danger" id="deldata">心意已决</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal">还没想好</button>
+         </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}
+{% block js %}
+<script>
+    $('.myedit').click(function () {
+        $(this).addClass('hidden').next().removeClass('hidden');
+        var url = $(this).parent().prev().text();
+        $(this).parent().prev().attr('old',url);
+        $(this).parent().prev().html('<input class="form-control" name="url" type="text" value="'+ url +'">');
+        var name = $(this).parent().prev().prev().text();
+        $(this).parent().prev().prev().attr('old',name);
+        $(this).parent().prev().prev().html('<input class="form-control" name="name" type="text" value="'+ name +'">')
+
+    });
+    $('.mysave').click(function () {
+        $(this).addClass('hidden').prev().removeClass('hidden');
+        var status = false;
+        var data = {};
+        data.url = $('input[name="url"]').val();
+        data.name = $('input[name="name"]').val();
+        $(this).parent().prev().text(data.url);
+        $(this).parent().prev().prev().text(data.name);
+        data.csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val();
+        data.cid = $(this).attr('cid');
+        data.pp_id = $(this).attr('pp');
+        $.ajax({
+            url:'/gitcadmin/page/index.html',
+            type:'POST',
+            dataType:'JSON',
+            data:data,
+            success:function (arg) {
+                if(arg.status){
+                    $(this).parent().prev().prev().addClass('greed')
+                }else {
+                    $(this).parent().prev().prev().addClass('red')
+                }
+            }
+        })
+
+    });
+    $('.del').click(function () {
+        $('#deldata').attr('cid',$(this).attr('cid'))
+    });
+    $('#deldata').click(function () {
+            var cid = $(this).attr('cid');
+             $.ajax({
+                 url:'/gitcadmin/page/del/'+cid,
+                 type:'GET',
+                 dataType:'JSON',
+                 success:function (arg) {
+                     if (arg.status){location.reload()}
+                     else {
+                         alert(arg.msg);
+                         $('#myModel').modal('hide');
+                     }
+                 }
+             })
+        })
+</script>
+{% endblock %}

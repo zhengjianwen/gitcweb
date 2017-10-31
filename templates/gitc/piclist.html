@@ -1,0 +1,218 @@
+{% extends 'gitc/index.html' %}
+{% load admintag %}
+{% block title %}图片管理{% endblock %}
+
+{% block head %}{% endblock %}
+{% block css %}
+{% endblock %}
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>图片管理 <small></small></h3>
+              </div>
+
+              <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">搜索</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+
+              <div class="clearfix"></div>
+
+              <div class="clearfix"></div>
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>图片列表 <small></small></h2>
+                      <div class="dt-buttons btn-group" style="margin-left: 30px;">
+                            <button type="button" id="add" class="btn btn-success" data-toggle="modal" data-target="#myModal">添加图片</button>
+                      <div class="btn-group" data-toggle="buttons" style="margin-left: 20px">
+                      </div>
+                      </div>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li>
+
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    {% for meet in meet_list %}
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                             <div class="x_panel" >
+                              <div class="x_title" >
+                                <h2><i class="fa fa-bars"></i> {{ meet }} <small>共计 {% getpicnub meet %} 张图片</small></h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                  <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                                  <li><a class="close-link"><i class="fa fa-close"></i></a></li>
+                                </ul>
+                                <div class="clearfix"></div>
+                              </div>
+                              <div class="x_content">
+
+                                <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                                  <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                                      {% for picty in meet.pictype_set.all %}
+
+                                            {% if forloop.counter == 1 %}
+                                                <li role="presentation" class="active">
+                                                <a href="#tab_content{{ picty.id }}" id="home-tab-{{ picty.id }}"
+                                                   role="tab" data-toggle="tab" aria-expanded="true" >{{ picty.cname }}</a>
+                                                     </li>
+                                                {% else %}
+                                                <li role="presentation">
+                                                <a href="#tab_content{{ picty.id }}" id="home-tab-{{ picty.id }}" role="tab"
+                                                   data-toggle="tab" aria-expanded="false">{{ picty.cname }}</a>
+                                                 </li>
+                                            {% endif %}
+
+                                      {% endfor %}
+                                  </ul>
+                                  <div id="myTabContent" class="tab-content">
+                                      {% for picty in meet.pictype_set.all %}
+                                          {% if forloop.counter == 1 %}
+                                               <div role="tabpanel" class="tab-pane fade active in" id="tab_content{{ picty.id }}" aria-labelledby="home-tab-{{ picty.id }}">
+                                            {% else %}
+                                               <div role="tabpanel" class="tab-pane fade" id="tab_content{{ picty.id }}" aria-labelledby="home-tab-{{ picty.id }}">
+                                          {% endif %}
+                                              <div class="x_content">
+                                                <table class="table table-hover">
+                                                  <thead>
+                                                    <tr>
+                                                      <th>编号</th>
+                                                      <th>标题</th>
+                                                      <th>链接</th>
+                                                      <th>图片</th>
+                                                      <th>描述</th>
+                                                      <th>权重</th>
+                                                      <th>状态</th>
+                                                      <th>操作</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                  {% for foo in picty.pic_set.all %}
+                                                    <tr>
+                                                      <th scope="row" data="{{ picty.id }}">{{ forloop.counter }}</th>
+                                                      <td>{{ foo.title }}</td>
+                                                      <td data="{{ foo.url }}"><a href="{{ foo.url }}">马上查看</a></td>
+                                                      <td><img src="{{ foo.img }}" style="width: 100px;height: 50px"></td>
+                                                      <td>{{ foo.content }}</td>
+                                                      <td>{{ foo.weight }}</td>
+                                                      <td data="{% makenub foo.status %}">{% if not foo.status %}显示{% else %}隐藏{% endif %}</td>
+                                                      <td>
+                                                        <button class="btn btn-success myedit" cid="{{ foo.id }}">编辑</button>
+                                                        <button class="btn btn-deger mydel" cid="{{ foo.id }}">删除</button>
+                                                      </td>
+                                                    </tr>
+                                                  {% endfor %}
+
+
+                                                  </tbody>
+                                                </table>
+
+                                              </div>
+                                          </div>
+                                      {% endfor %}
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                    {% endfor %}
+
+
+
+                  </div>
+                </div>
+              </div>
+
+
+                  </div>
+                  </div>
+                </div>
+              </div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">添加图片</h4>
+      </div>
+        <form action="/gitcadmin/postpic/index.html" method="post" id="myform" enctype="multipart/form-data">{% csrf_token %}
+            <div class="modal-body" style="height: 500px">
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-3 control-label" style="margin-top: 5px">会议中文名称</label>
+                <div class="col-sm-8">
+                  {{ obj.orgid_id }}
+                </div>
+              </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label" style="margin-top: 5px">权重</label>
+                <div class="col-sm-8" style="margin-top: 5px">
+                  {{ obj.weight }}
+                </div>
+              </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label" style="margin-top: 5px">状态</label>
+                <div class="col-sm-8" style="margin-top: 5px">
+                  {{ obj.status }}
+                </div>
+              </div>
+             <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label" style="margin-top: 5px">图片标题</label>
+                <div class="col-sm-8" style="margin-top: 5px">
+                  {{ obj.title }}
+                </div>
+              </div>
+             <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label" style="margin-top: 5px">链接地址</label>
+                <div class="col-sm-8" style="margin-top: 5px">
+                  {{ obj.url }}
+                </div>
+              </div>
+             <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label" style="margin-top: 5px">图片上传</label>
+                <div class="col-sm-8" style="margin-top: 5px">
+                  {{ obj.img }}
+                </div>
+              </div>
+             <div class="form-group">
+                <label for="inputPassword3" class="col-sm-3 control-label" style="margin-top: 5px">描述信息</label>
+                <div class="col-sm-8" style="margin-top: 5px">
+                  {{ obj.content }}
+                </div>
+              </div>
+      </div>
+            <div class="modal-footer">
+                <input type="hidden" name="cid" value="0">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <input type="submit" class="btn btn-primary " value="保存"/>
+            </div>
+        </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+{% endblock %}
+
+{% block js %}
+    <script src="/static/build/js/picedit.js"></script>
+{% endblock %}

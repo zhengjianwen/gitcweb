@@ -1,0 +1,68 @@
+{% load admintag %}
+<div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2><i class="fa fa-male"></i>  {{ library_id }} - {{ name }}</h2>
+          <div style="display: inline-block;margin-left: 20px">
+                <a type="button" class="btn btn-success btn-sm" href="/gitcadmin/personnel-{{ page_id }}/{{ library_id }}/edit/0">添加人员</a>
+                <a type="button" class="btn btn-success btn-sm" href="/gitcadmin/personnel-{{ page_id }}/{{ library_id }}/import.html">批量导入</a>
+          </div>
+          <ul class="nav navbar-right panel_toolbox">
+            <li style="margin-right: 20px;margin-top: 5px"><span></span></li>
+            <li><a class="collapse-link" status="0"><i class="fa fa-chevron-down">展开</i></a>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                  <i class="fa fa-unlink">接口地址</i></a>
+              <ul class="fa dropdown-menu" role="menu">
+                  <li style="padding: 10px ;width: 300px">所属页面ID：{{ page_id }}  所属栏目ID：{{ library_id }}</li>
+                  <li style="padding: 10px ;width: 300px">name:姓名 ename:全拼 company:公司</li>
+                  <li style="padding: 10px ;width: 300px">position:职位 pic:头像 summary:简介</li>
+                  <li style="padding: 10px;color: #00A000">图片上传大小限制在20kb以内！</li>
+                  <li style="padding: 10px;color: #00A000">图片尺寸限制 143*145px！</li>
+              </ul>
+            </li>
+            <li><a class="close-link"><i class="fa fa-close">关闭</i></a>
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content" style="display: none;">
+            <div class="col-lg-12 col-md-12 contents">
+
+                    <div class="ibox float-e-margins">
+
+                        <div class="ibox-content row ">
+                            {% for person in data_list %}
+                             <div class="person" style="width: 190px;padding-left: 10px;padding-right: 5px;position: relative;float: left;">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading name text-center">
+                                        {{ person.name }} <br>
+                                        {% splitstr person.company %}
+                                    </div>
+                                    <div class="panel-body" style="padding: 15px;display: flex;justify-content: center;align-items: center;">
+                                    <a href="/gitcadmin/personnel-{{ page_id }}/{{ library_id }}/edit/{{ person.id }}">
+                                    {% if person.pic %}
+                                        <img src="{{ person.pic }}" style="width: {{ library_obj.width }};height: {{ library_obj.height }}">
+                                        {% else %}
+                                        <img src="\static\gitc\cx.jpg" style="width: 143px;height:145px">
+                                    {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="panel-footer text-center">
+                                        <a href="/gitcadmin/personnel-{{ page_id }}/{{ library_id }}/edit/{{ person.id }}">编辑</a>
+                                        <a href="javascript:void (0)" id="person{{ person.id }}" onclick="delperson({{ person.id }})">删除</a>
+                                    </div>
+                                </div>
+                             </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+			 </div>
+
+        </div>
+      </div>
+</div>
+

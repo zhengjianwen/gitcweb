@@ -1,0 +1,138 @@
+{% extends 'index.html' %}
+{% load maketemplates %}
+{% block title %}会员编辑{% endblock %}
+
+{% block head %}{% endblock %}
+{% block css %}
+<style>
+    .th{text-align: center;vertical-align: middle;}
+    .td{text-align: center;vertical-align: middle;}
+    .tr{text-align: center;vertical-align: middle;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>  会员编辑<small></small></h3>
+                  {% csrf_token %}
+              </div>
+              <div class="clearfix"></div>
+              <div class="row">
+                <div class="clearfix"></div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>编辑用户{{ u.name }} 信息<small></small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                              <li>
+                              </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">姓名
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.name }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">手机号
+                                    </label>
+                                    <div class="col-md-8 col-sm-6 col-xs-12">
+                                        {{ obj.phone }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-6">邮箱
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-3">
+                                      {{ obj.email }}
+                                    </div>
+                                  </div>
+                                    <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">性别
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-3">
+                                      {{ obj.sex }}
+                                    </div>
+                                  </div>
+
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">年龄
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.age }}
+                                    </div>
+                                  </div>
+                                  <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">公司
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.company }}
+                                    </div>
+                                  </div>
+                                    <div class="item form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">职位
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      {{ obj.position }}
+                                    </div>
+                                  </div>
+                                <hr >
+                                  <div class="ln_solid"></div>
+                                  <div class="form-group">
+                                    <div class="col-md-6 col-md-offset-3">
+                                      <a type="submit" class="btn btn-primary" href="/gitcadmin/memberlist.html">返回列表</a>
+                                      <input type="submit"  class="btn btn-success" value="提交数据">
+                                    </div>
+                                  </div>
+                                </form>
+
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                <div class="alert alert-success" role="alert">
+                                    <ul>
+                                        <li>用户信息，请谨慎修改！</li>
+                                        <li>文字最大为256字；</li>
+                                    </ul>
+                                </div>
+
+                                {% if error %}
+                                 <div class="alert alert-danger" role="alert">
+                                    <ul>
+                                        {% for foo in self.error %}
+                                        <li>{{ foo.msg }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+</script>
+
+
+{% endblock %}

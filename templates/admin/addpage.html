@@ -1,0 +1,164 @@
+{% extends 'index.html' %}
+{% block title %}添加页面{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>添加页面 <small></small></h3>
+
+              </div>
+              <div class="clearfix"></div>
+              <div class="row">
+                <div class="clearfix"></div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>请添加您要增加的页面！<small></small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                              <li>
+                              </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="col-md-3 col-sm-12 col-xs-12">
+                                <div class="form-horizontal">
+                                    {% csrf_token %}
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">选择模板</label>
+                                        <div class="col-sm-8">
+                                        {% if request.method == 'GET' %}
+                                            <select class="form-control" id="selectpp" name="pp_id">
+                                              {% for dom in domain_list %}
+                                                  <optgroup label="{{ dom.name }}">
+                                                  {% for mb in dom.pagetemplate_set.all %}
+                                                    <option value="{{ mb.id }}">{{ mb.name }}</option>
+                                                  {% endfor %}
+                                                  </optgroup>
+                                              {% endfor %}
+                                            </select>
+                                            {% else %}
+                                            <input type="hidden" name="cid" value="{{ cid }}">
+                                        {% endif %}
+
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">页面名称</label>
+                                        <div class="col-sm-8">
+                                          <input type="text" class="form-control" name="name" id="page" placeholder="输入您新页面名称">
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label class="col-sm-4 control-label">页面链接</label>
+                                        <div class="col-sm-8">
+                                          <input type="text" class="form-control" name="url" id="url" placeholder="输入请求地址的url">
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <div class="col-sm-offset-4 col-sm-10">
+                                          <button type="button" data-toggle="modal" id="catpage" data-target="#myModal" class="btn btn-default">查看页面</button>
+                                          <button type="submit" class="btn btn-success" id="makepage">创建页面</button>
+                                          <div class="hide" style="display: inline-block" id="loading">
+                                              <img src="/static/gitc/loading.gif" width="30px" height="30px">
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-12 col-xs-12">
+                                <div class="alert alert-success" role="alert">
+                                    <ul>
+                                        <li>创建页面前，可以先查看页面效果！</li>
+                                        <li>名称为页面名称，方便后台查找</li>
+                                        <li>页面链接为，更换图片后可以快速点击查看效果</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" id="myModal" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">页面模块展示</h4>
+        </div>
+        <div class="modal-body">
+            {% for domain in domain_list %}
+                {% for foo in domain.pagetemplate_set.all %}
+                    {% if forloop.counter == 1 %}
+                        <img cid="{{ foo.id }}" src="{{ foo.img }}" width="100%"  alt="">
+                        {% else %}
+                        <img cid="{{ foo.id }}" class="hide" src="{{ foo.img }}" width="100%"  alt="">
+                    {% endif %}
+
+                {% endfor %}
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('#makepage').click(function () {
+            $(this).attr('disabled',"disabled");
+            $('#loading').removeClass('hide');
+            var pp_id = $('select[name="pp_id"]').val();
+            var name = $('input[name="name"]').val();
+            var url = $('input[name="url"]').val();
+            var csrf = $('input[name="csrfmiddlewaretoken"]').val();
+            var that =$(this);
+            $.ajax({
+                url:'/gitcadmin/page/add.html',
+                type:'POST',
+                dataType:'JSON',
+                data:{'name':name,'pp_id':pp_id,'url':url,'csrfmiddlewaretoken':csrf},
+                success:function (arg) {
+                    if (arg.status){
+                        window.location.href=arg.url;
+                    }else {
+                        alert(arg.msg);
+                        that.removeAttr('disabled');
+                        $('#loading').addClass('hide');
+                    }
+                }
+            })
+
+
+        });
+        $('#selectpp').change(function () {
+            var ret =$(this).val();
+            $('.modal-body').find('img').each(function () {
+                var cid = $(this).attr('cid');
+                if (cid == ret){
+                    $(this).removeClass('hide');
+                }else {
+                    $(this).addClass('hide');
+                }
+            })
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'index.html' %}
+{% load admintag %}
+{% block title %}议题申请管理{% endblock %}
+
+{% block head %}{% endblock %}
+{% block css %}
+     <style>
+     .dele{color: #0f0f0f}
+     .dele:hover{color: red;}
+     </style>
+{% endblock %}
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>议题管理 <small>共{{ data.count }}条</small></h3>
+              </div>
+
+              <div class="title_right">
+                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search for...">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default" type="button">搜索</button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+
+              <div class="clearfix"></div>
+
+              <div class="clearfix"></div>
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>议题列表 <small>每页{{ pagemax_nub }}条</small></h2>
+                    <a type="button" style="margin-left: 20px;"  class="btn btn-success" id="domid" bid="{{ domain_list.first.id }}">生成excel</a>
+                    <a type="button" style="margin-left: 20px;"  class="btn btn-success hide" id="down">下载</a>
+                    <div class="clearfix"></div></div>
+                    <div class="x_content">
+                        <div class="col-sm-12">
+                            <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
+                                <thead>
+                                    <tr role="row" class="text-center">
+                                        <th class="sorting_disabled text-center" rowspan="1" colspan="1" aria-label="" style="width: 60px;">ID</th>
+                                        <th class="sorting text-center" style="width: 150px;vertical-align:middle">照片</th>
+                                        <th class="sorting text-center" style="width: 80px;vertical-align:middle">姓名 <input type="checkbox" value="phone" checked></th>
+                                        <th class="sorting text-center" style="width: 130px;vertical-align:middle">演讲主题 <input type="checkbox" value="theme" checked></th>
+                                        <th class="sorting text-center" style="width: 130px;vertical-align:middle">演讲内容 <input type="checkbox" value="content" checked></th>
+                                        <th class="sorting text-center" style="width: 130px;vertical-align:middle">兴趣专场 <input type="checkbox" value="interest" checked></th>
+                                        <th class="sorting text-center" style="width: 130px;vertical-align:middle">备注 <input type="checkbox" value="remark" checked></th>
+                                        <th class="sorting text-center" style="width: 130px;vertical-align:middle">评分 </th>
+                                        <th class="sorting text-center" style="width: 130px;vertical-align:middle">意见建议 <input type="checkbox" value="suggest" checked></th>
+                                        <th class="sorting text-center" style="width: 80px;vertical-align:middle">申请时间 <input type="checkbox" value="ctime" checked></th>
+                                        <th class="sortingtext-center" style="width: 100px;vertical-align:middle">操作</th>
+                                    </tr>
+                                <tbody>
+                            {% for foo in data %}
+                                    <tr role="row" class="odd text-center" style="vertical-align:middle">
+                                        <td style="vertical-align:middle">{{ foo.id }}</td>
+                                        <td style="vertical-align:middle"><img src="{{ foo.photo }}" alt="暂无照片" style="width: 120px;height: 120px"></td>
+                                        <td style="vertical-align:middle">{{ foo.name }}</td>
+                                        <td style="vertical-align:middle">{{ foo.theme }}</td>
+                                        <td style="vertical-align:middle">{{ foo.content }}</td>
+                                        <td style="vertical-align:middle">{{ foo.interest }}</td>
+                                        <td style="vertical-align:middle">{{ foo.remark }}</td>
+                                        <td style="vertical-align:middle">
+                                            主题创新：{{ foo.innovate }}<br>
+                                            话题热度: {{ foo.hot_topic }}<br>
+                                            实战经验: {{ foo.experience }}<br>
+                                            通用性: {{ foo.generality }}<br>
+                                        </td>
+                                        <td style="vertical-align:middle">{{ foo.suggest }}</td>
+                                        <td style="vertical-align:middle">{{ foo.ctime }}</td>
+                                        <td style="vertical-align:middle">
+                                            <a href="javascript:void (0);" class="myinfo" name="{{ foo.name }}" phone="{{ foo.phone }}"
+                                               email="{{ foo.email }}" company="{{ foo.company }}" position="{{ foo.position }}" data-toggle="modal" data-target="#myModal">
+                                                <i class="fa fa-search"></i>联系方式</a>
+                                        </td>
+                                    </tr>
+                            {% endfor %}
+                            </tbody>
+                    </table>
+                        </div>
+                     <ul class="pagination pagination-sm">
+                            {{ page_obj.page_str|safe }}
+                    </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">信息详情</h4>
+      </div>
+      <div class="modal-body">
+          <h4>姓 名： <span id="mname">张三</span></h4>
+          <h4>手 机： <span id="mphone">张三</span></h4>
+          <h4>邮 箱： <span id="memail">张三</span></h4>
+          <h4>公 司： <span id="mcompany">张三</span></h4>
+          <h4>职 位： <span id="mposition ">张三</span></h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+{#        <button type="button" class="btn btn-primary">Save changes</button>#}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(".myinfo").click(function () {
+            $('#mname').text($(this).attr("name"));
+            $('#mphone').text($(this).attr("phone"));
+            $('#memail').text($(this).attr("email"));
+            $('#mcompany').text($(this).attr("company"));
+            $('#mposition').text($(this).attr("position"))
+        });
+
+        $('#domid').click(function () {
+            var bid = $(this).attr("bid");
+            var title = [];
+            $("input[type='checkbox']").each(function () {
+                if ($(this).attr("checked")){
+                    title.push($(this).val())
+             }
+            });
+            $.ajax({
+                url:"/gitcadmin/meetissue/excel/" + bid,
+                type:"GET",
+                dataType:"JSON",
+                data:{"keys":title},
+                success:function (arg) {
+                    if (arg.status){
+                        $("#domid").addClass("hide");
+                        $("#down").removeClass("hide").attr("href",arg.url);
+                    }else {
+                        alert(arg.msg);
+                        $("#domid").removeClass("hide");
+                    }
+                }
+            })
+        });
+
+    </script>
+
+{% endblock %}

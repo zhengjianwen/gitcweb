@@ -1,0 +1,64 @@
+<?php
+#注册插件
+RegisterPlugin("Huceo_dictum","ActivePlugin_Huceo_dictum");
+
+function ActivePlugin_Huceo_dictum() {
+	Add_Filter_Plugin('Filter_Plugin_Index_Begin','Huceo_dictum_moduleContent');
+}
+
+function Huceo_dictum_moduleContent(){
+	global $zbp;
+	if(isset($zbp->modulesbyfilename['Huceo_dictum'])){
+	$zbp->modulesbyfilename['Huceo_dictum']->Content =Huceo_dictum_json();
+	}
+}
+
+function Huceo_dictum_buildModulediv(){
+global $zbp;
+	if(!isset($zbp->modulesbyfilename['Huceo_dictum']))	{
+		$t = new Module();
+		$t->Name = "名言警句";
+		$t->FileName = "Huceo_dictum";
+		$t->Source = "Huceo_dictum";
+		$t->SidebarID = 0;
+		$t->Content = "";
+		$t->IsHideTitle=false;
+		$t->HtmlID = "divHuceo_dictum";
+ 		$t->Type = "div";
+		$t->MaxLi=0;
+		$t->Content = '';
+		$t->Save();
+	}
+}
+function Huceo_dictum_json(){
+	global $zbp;
+	$apikey = $zbp->Config('Huceo_dictum')->apikey;
+	$url = 'http://api.tianapi.com/keji/?key='.$apikey.'&num=5';
+$result= Network::Create();
+	if (!$result) {
+		throw new Exception('主机没有开启网络功能');
+	}
+$result->open('get',$url);
+$result->send($url);
+$lishijson=json_decode($result->responseText,true);
+
+if(!empty($lishijson['newslist'])){
+	$suju = ""
+	$data = $lishijson['newslist']
+	$nub = $count($data)
+	for ($i=0; $i < $nub; $i++)
+	{
+		$suju += $data[i]['title']
+	}
+return 	$lishijson['newslist'][0]['title'].'-'.$lishijson['newslist'][0]['description'];
+          }else{
+	return 	'<li>木有了，杯具了...请尝试检查插件设置的APIKEY</li>';
+		  }
+}
+function InstallPlugin_Huceo_dictum() {
+	global $zbp;
+	Huceo_dictum_buildModulediv();
+		$zbp->Config('Huceo_dictum')->apikey='63897efdf51ff68391ab361f2082c724';
+		$zbp->SaveConfig('Huceo_dictum');
+}
+function UninstallPlugin_Huceo_dictum() {}

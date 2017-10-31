@@ -1,0 +1,328 @@
+{% extends 'index.html' %}
+{% block title %}邮件设置{% endblock %}
+
+{% block head %}{% endblock %}
+{% block css %}
+<style>
+    th{vertical-align: middle!important;text-align: center}
+    td{vertical-align: middle!important;text-align: center}
+    a.myedit:hover{color: green;}
+    a.myeditc:hover{color: green;}
+    a.del:hover{color: red;}
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>邮件账户管理 <small></small></h3>
+                  {% csrf_token %}
+              </div>
+              <div class="clearfix"></div>
+              <div class="row">
+                <div class="clearfix"></div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <div class="x_panel">
+                          <div class="x_title">
+                            <h2><i class="fa fa-bars"></i> 邮件信息列表 <small>系统内置的无法删除</small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                              </li>
+                              <li><a class="close-link"><i class="fa fa-close"></i></a>
+                              </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                          </div>
+                          <div class="x_content">
+                            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                              <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                                <li role="presentation" class="active">
+                                    <a href="#tab_content1" id="sendgroup" role="tab" data-toggle="tab" aria-expanded="true">发送配置</a>
+                                </li>
+                                <li role="presentation" class="">
+                                    <a href="#tab_content2" role="tab" id="recvgroup" data-toggle="tab" aria-expanded="false">收信息账户</a>
+                                </li>
+                              </ul>
+                              <div id="myTabContent" class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="sendgroup">
+                                    <table class="table table-bordered">
+                                      <thead>
+                                        <tr>
+                                          <th>编号</th>
+                                          <th>组名称</th>
+                                          <th>发送地址</th>
+                                          <th>账户</th>
+                                          <th>端口</th>
+                                          <th>是否验证</th>
+                                          <th>是否加密</th>
+                                          <th>操作</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                      {% for mail in send_mail_list %}
+                                            <tr>
+                                              <th>{{ forloop.counter }}</th>
+                                              <td>{{ mail.eg.name }}</td>
+                                              <td class="smtp">{{ mail.smtp }}</td>
+                                              <td class="user">{{ mail.user }}</td>
+                                              <td class="port">{{ mail.port }}</td>
+                                              <td>{{ mail.get_auth_display }}</td>
+                                              <td>{{ mail.get_issh_display }}</td>
+                                              <td>
+                                                  <a href="javascript:void (0);" cid="{{ mail.id }}" eg="{{ mail.eg.id }}" auth="{{ mail.auth }}" issh="{{ mail.issh }}"  class="myedit" >
+                                                    <i class="fa fa-edit"></i> 编辑
+                                                    <span class="text-muted"></span>
+                                                  </a>
+                                                  <a href="javascript:void (0);" class="del" cid="{{ mail.id }}" data-toggle="modal" data-target=".bs-example-modal-sm">
+                                                    <i class="fa fa-close"></i> 删除
+                                                    <span class="text-muted"></span>
+                                                  </a>
+                                              </td>
+
+                                            </tr>
+                                      {% endfor %}
+
+
+                                      </tbody>
+                                    </table>
+
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="recvgroup">
+                                    <table class="table table-bordered">
+                                      <thead>
+                                        <tr>
+                                          <th>组名称</th>
+                                          <th>编号</th>
+                                          <th>邮件地址</th>
+                                          <th>操作</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                      {% for row in recv_mail_list %}
+                                          {% for mail in row.email_set.all %}
+                                            <tr>
+                                            {% if forloop.counter == 1 %}
+                                                <th rowspan="{{ row.email_set.count }}">{{ row.name }}</th>
+                                            {% endif %}
+                                              <td>{{ forloop.counter}}</td>
+                                              <td>{{ mail.user }}</td>
+                                              <td>
+                                                  <a href="javascript:void (0);" cid="{{ mail.id }}" eg="{{ row.id }}" class="myeditc" >
+                                                    <i class="fa fa-edit"></i> 编辑
+                                                    <span class="text-muted"></span>
+                                                  </a>
+                                                  <a href="javascript:void (0);" class="del" cid="{{ mail.id }}" data-toggle="modal" data-target=".bs-example-modal-sm">
+                                                    <i class="fa fa-close"></i> 删除
+                                                    <span class="text-muted"></span>
+                                                  </a>
+                                              </td>
+
+                                            </tr>
+                                          {% endfor %}
+                                      {% endfor %}
+
+
+                                      </tbody>
+                                    </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <div class="col-md-4 col-sm-4 col-xs-12">
+                        <div class="x_panel">
+                          <div class="x_title">
+                            <h2>添加邮件<small style="color: red;">{{ error }}</small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                              </li>
+                              <li><a class="close-link"><i class="fa fa-close"></i></a>
+                              </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                          </div>
+                          <div class="x_content">
+                            <form class="form-horizontal" id="myform"  method="post">{% csrf_token %}
+                                  <input type="hidden" name="cid" value="0">
+                                  <div id="eg" class="form-group">
+                                    <label class="col-sm-2 control-label">邮件组</label>
+                                    <div class="col-sm-10">
+                                    <select class="form-control" id="id_eg_id" name="eg_id" required="">
+                                        {% for row in mailtype %}
+                                        <option value="{{ row.id }}" gclass="{{ row.effect }}">{{ row.name }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    </div>
+                                  </div>
+                                  <div id="smtp" class="form-group">
+                                    <label class="col-sm-2 control-label">发件地址</label>
+                                    <div class="col-sm-10">
+                                      {{ obj.smtp }}
+                                    </div>
+                                  </div>
+                                  <div id="port"   class="form-group">
+                                    <label class="col-sm-2 control-label">发送端口</label>
+                                    <div class="col-sm-10">
+                                      {{ obj.port }}
+                                    </div>
+                                  </div>
+                                  <div id="user"   class="form-group">
+                                    <label class="col-sm-2 control-label">邮箱账户</label>
+                                    <div class="col-sm-10">
+                                      {{ obj.user }}
+                                    </div>
+                                  </div>
+                                  <div id="pasw"   class="form-group">
+                                    <label class="col-sm-2 control-label">邮箱密码</label>
+                                    <div class="col-sm-10">
+                                      {{ obj.passwd }}
+                                    </div>
+                                  </div>
+                                  <div id="auth"   class="form-group">
+                                    <label class="col-sm-2 control-label">是否验证</label>
+                                    <div class="col-sm-10">
+                                      {{ obj.auth }}
+                                    </div>
+                                  </div>
+                                  <div id="issh"   class="form-group">
+                                    <label class="col-sm-2 control-label">是否加密</label>
+                                    <div class="col-sm-10">
+                                      {{ obj.issh }}
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                      <input type="reset" class="btn btn-success hide" value="重置">
+                                      <input type="submit" class="btn btn-success" value="提交">
+                                    </div>
+                                  </div>
+                            </form>
+
+                          </div>
+                        </div>
+                      </div>
+                </div>
+              </div>
+            </div>
+      </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+
+     <div class="panel panel-danger">
+          <div class="panel-heading">
+            <h3 class="panel-title">警告</h3>
+          </div>
+          <div class="panel-body">
+              <p></p>
+              <h3>你确认删除此数据吗？</h3>
+              <p></p>
+          </div>
+         <div class="panel-footer">
+            <button type="button" class="btn btn-danger" id="deldata">心意已决</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal">还没想好</button>
+         </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('.myedit').click(function () {
+            $('#auth').removeClass('hidden');
+            $('#issh').removeClass('hidden');
+            $('#port').removeClass('hidden');
+            $('#smtp').removeClass('hidden');
+            $('#pasw').removeClass('hidden');
+            var cid = $(this).attr('cid');
+            $('input[name="cid"]').val(cid);
+            var auth = $(this).attr('auth');
+            var eg = $(this).attr('eg');
+            var issh = $(this).attr('issh');
+            $('select[name="eg_id"]').find('option').each(function () {
+               var v = $(this).val();
+               if (v == eg){$(this).attr('selected',true)}
+               else {$(this).attr('selected',false)}
+            });
+            $('select[name="auth"]').find('option').each(function () {
+               var v = $(this).val();
+               if (v == auth){$(this).attr('selected',true)}
+               else {$(this).attr('selected',false)}
+            });
+            $('select[name="issh"]').find('option').each(function () {
+               var v = $(this).val();
+               if (v == issh){$(this).attr('selected',true)}
+               else {$(this).attr('selected',false)}
+            });
+
+            var smtp = $(this).parent().parent().find('td[class="smtp"]').text();
+            var user = $(this).parent().parent().find('td[class="user"]').text();
+            var port = $(this).parent().parent().find('td[class="port"]').text();
+
+            $('input[name="user"]').val(user);
+            $('input[name="port"]').val(port);
+            $('input[name="smtp"]').val(smtp);
+
+            $('input[type="submit"]').val('修改');
+            $('input[type="reset"]').removeClass('hide');
+        });
+        $('.myeditc').click(function () {
+            var cid = $(this).attr('cid');
+            $('input[name="cid"]').val(cid);
+            var eg = $(this).attr('eg');
+
+            $('select[name="eg_id"]').find('option').each(function () {
+               var v = $(this).val();
+               if (v == eg){$(this).attr('selected',true)}
+               else {$(this).attr('selected',false)}
+            });
+            $('#auth').addClass('hidden');
+            $('#issh').addClass('hidden');
+            $('#port').addClass('hidden');
+            $('#smtp').addClass('hidden');
+            $('#pasw').addClass('hidden');
+            var user = $(this).parent().siblings().eq(2).text();
+            $('input[name="user"]').val(user);
+
+
+            $('input[type="submit"]').val('修改');
+            $('input[type="reset"]').removeClass('hide');
+        });
+        $('#id_eg_id').mouseleave(function (){
+            var val = $(this).val();
+            var gclass;
+            $(this).find('option').each(function () {
+                var v = $(this).val();
+                if (v == val){
+                    gclass = $(this).attr('gclass')
+                }
+            });
+        if (gclass == 1){sendgroup()}else {racvgroup()}
+        });
+    function sendgroup() {
+         $('#auth').removeClass('hidden');
+         $('#issh').removeClass('hidden');
+         $('#port').removeClass('hidden');
+         $('#smtp').removeClass('hidden');
+         $('#pasw').removeClass('hidden');
+         $('#myform').reset();
+         $('input[type="reset"]').removeClass('hide');
+    }
+    function racvgroup() {
+         $('#auth').addClass('hidden');
+         $('#issh').addClass('hidden');
+         $('#port').addClass('hidden');
+         $('#smtp').addClass('hidden');
+         $('#pasw').addClass('hidden');
+         $('#myform').reset();
+        $('input[type="reset"]').removeClass('hide');
+    }
+    </script>
+{% endblock %}

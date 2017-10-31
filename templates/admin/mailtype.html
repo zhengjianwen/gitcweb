@@ -1,0 +1,155 @@
+{% extends 'index.html' %}
+{% block title %}邮件设置{% endblock %}
+
+{% block head %}{% endblock %}
+{% block css %}
+<style>
+    th{vertical-align: middle!important;text-align: center}
+    td{vertical-align: middle!important;text-align: center}
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>邮件组管理 <small></small></h3>
+                  {% csrf_token %}
+              </div>
+              <div class="clearfix"></div>
+              <div class="row">
+                <div class="clearfix"></div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <div class="x_panel">
+                          <div class="x_title">
+                            <h2>邮件组列表<small>系统组不能被删除</small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                              <li><a class="close-link"><i class="fa fa-close"></i></a>
+                              </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                          </div>
+                          <div class="x_content">
+                            <table class="table table-hover">
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>功能</th>
+                                  <th>组名称</th>
+                                  <th>操作</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              {% for row in mail_group_list %}
+                                <tr>
+                                  <th scope="row">{{ row.id }}</th>
+                                  <td>{{ row.get_effect_display }}</td>
+                                  <td>{{ row.name }}</td>
+                                  <td>
+                                      <a href="javascript:void (0);" cid="{{ row.id }}" class="myedit" >
+                                            <i class="fa fa-edit"></i> 编辑
+                                            <span class="text-muted"></span>
+                                        </a>
+                                      {% if forloop.counter < 2 %}
+                                       {% else %}
+                                          <a href="javascript:void (0);" class="del" cid="{{ row.id }}" data-toggle="modal" data-target=".bs-example-modal-sm">
+                                            <i class="fa fa-close"></i> 删除
+                                            <span class="text-muted"></span>
+                                        </a>
+                                      {% endif %}
+
+                                  </td>
+                                </tr>
+                              {% endfor %}
+                              </tbody>
+                            </table>
+
+                          </div>
+                        </div>
+                      </div>
+                    <div class="col-md-4 col-sm-4 col-xs-12">
+                        <div class="x_panel">
+                          <div class="x_title">
+                            <h2>添加邮件组<small></small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                              </li>
+                              <li><a class="close-link"><i class="fa fa-close"></i></a>
+                              </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                          </div>
+                          <div class="x_content">
+                            <form class="form-horizontal" method="post">{% csrf_token %}
+                                <input type="hidden" name="cid" value="0">
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label">功能类型</label>
+                                <div class="col-sm-10">
+                                  {{ obj.effect }}
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label">组 名 称</label>
+                                <div class="col-sm-10">
+                                  {{ obj.name }}
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                  <input type="submit" class="btn btn-success" value="提交">
+                                </div>
+                              </div>
+                            </form>
+
+                          </div>
+                        </div>
+                      </div>
+                </div>
+              </div>
+            </div>
+      </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+
+     <div class="panel panel-danger">
+          <div class="panel-heading">
+            <h3 class="panel-title">警告</h3>
+          </div>
+          <div class="panel-body">
+              <p></p>
+              <h3>你确认删除此数据吗？</h3>
+              <p></p>
+          </div>
+         <div class="panel-footer">
+            <button type="button" class="btn btn-danger" id="deldata">心意已决</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal">还没想好</button>
+         </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('.myedit').click(function () {
+            var cid = $(this).attr('cid');
+            var name = $(this).parent().prev().text();
+            var effect = $(this).parent().prev().prev().text();
+            $('input[name="cid"]').val(cid);
+            $('input[name="name"]').val(name);
+            $('#id_effect').find('option').each(function () {
+                var val = $(this).text();
+                if (val == effect){
+                    $(this).prop('selected',true);
+                }else {
+                    $(this).prop('selected',false);
+                }
+            });
+            $('input[type="submit"]').val('修改');
+        });
+    </script>
+{% endblock %}

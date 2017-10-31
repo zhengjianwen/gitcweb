@@ -1,0 +1,349 @@
+{% extends 'index.html' %}
+{% load maketemplates %}
+{% block title %}插件设置{% endblock %}
+
+{% block head %}{% endblock %}
+{% block css %}
+<style>
+    th{vertical-align: middle!important;text-align: center}
+    td{vertical-align: middle!important;text-align: center}
+    a:hover{color: green}
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>插件设置 <small></small></h3>
+                  {% csrf_token %}
+              </div>
+              <div class="clearfix"></div>
+              <div class="row">
+                <div class="clearfix"></div>
+                {% for domain in domain_list %}
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>{{ domain }}插件列表</h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                              </li>
+                              <li><a class="close-link"><i class="fa fa-close"></i></a>
+                              </li>
+                            </ul>
+                            <button type="button" style="margin-left: 20px;" class="btn btn-success addweb" cid="{{ domain.id }}"
+                                    data-toggle="modal" data-target="#myModal">添加插件</button>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content" style="position: relative">
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <div  role="tabpanel" data-example-id="togglable-tabs">
+                                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                                          {% for pt in domain.pagetemplate_set.all %}
+                                              {% if forloop.counter == 1 %}
+                                                   <li role="presentation" class="active in">
+                                              {% else %}
+                                                  <li role="presentation" class="">
+                                              {% endif %}
+                                              <a href="#tab_content{{ pt.id }}" id="tab-{{ pt.id }}" role="tab"
+                                                 data-toggle="tab" aria-expanded="{% if forloop.counter == 1 %}true{% else %}fales{% endif %}"
+                                                 cid="{{ pt.id }}" class="libtab">{{ pt.name }}
+                                              </a>
+                                            </li>
+                                          {% endfor %}
+                                      </ul>
+                                      <div id="myTabContent" class="tab-content">
+
+                                        {% for pt in domain.pagetemplate_set.all %}
+                                            {% if forloop.counter == 1 %}
+                                                <div role="tabpane{{ pt.id }}" class="tab-pane fade active in"
+                                                     id="tab_content{{ pt.id }}" aria-labelledby="tab-{{ pt.id }}">
+                                            {% else %}
+                                                <div role="tabpane{{ pt.id }}" class="tab-pane fade" id="tab_content{{ pt.id }}"
+                                                     aria-labelledby="tab-{{ pt.id }}">
+                                            {% endif %}
+                                                <table class="table table-striped table-bordered dataTable no-footer">
+                                                  <thead>
+                                                    <tr>
+                                                      <th>NO.</th>
+                                                      <th>插件名称</th>
+                                                      <th>插件模板</th>
+                                                      <th>宽度</th>
+                                                      <th>高度</th>
+                                                      <th>大小</th>
+                                                      <th>权重</th>
+                                                      <th>其他</th>
+                                                      <th>操作</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                    {% for l in pt.library_set.all %}
+                                                      <tr>
+                                                          <td>{{ forloop.counter }}</td>
+                                                          <td>{{ l.name }}</td>
+                                                          <td>{{ l.plugin.name }}</td>
+                                                          <td>{{ l.width }}</td>
+                                                          <td>{{ l.height }}</td>
+                                                          <td>{{ l.space }}</td>
+                                                          <td>{{ l.weight }}</td>
+                                                          <td>{{ l.other }}</td>
+                                                          <td>
+                                                                <a href="javascript:void (0);" class="myedit" >
+                                                                    <i class="fa fa-edit"></i> 编辑
+                                                                    <span class="text-muted"></span>
+                                                                </a>
+                                                                <a href="javascript:void (0);" class="mysave hidden"
+                                                                   cid="{{ l.id }}" ptl="{{ l.ptl.id }}" plugin="{{ l.plugin.id }}">
+                                                                    <i class="fa fa-save"></i> 保存
+                                                                    <span class="text-muted"></span>
+                                                                </a>
+                                                                <!--
+                                                                <a href="javascript:void (0);" class="del" cid="{{ l.id }}"
+                                                                   data-toggle="modal" data-target=".bs-example-modal-sm">
+                                                                    <i class="fa fa-close"></i> 删除
+                                                                    <span class="text-muted"></span>
+                                                                </a>-->
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                  </tbody>
+
+                                                </table>
+                                             </div>
+                                        {% endfor %}
+
+                                      </div>
+                                    </div>
+                            </div>
+                            {% if forloop.counter == 1 %}
+                             <div class="col-md-4 col-sm-4 col-xs-12" >
+                                <div class="panel panel-primary">
+                                      <div class="panel-heading">提示</div>
+                                      <div class="panel-body">
+                                        <ul>
+                                            {% for foo in text %}
+                                                <li style="font-size: 16px;">{{ foo }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                      </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            </div>
+
+                        </div>
+                    </div>
+              </div>
+                {% endfor %}
+            </div>
+      </div>
+</div>
+</div>
+<option value="3">会议模板</option>
+<div class="modal fade" tabindex="-1" id="myModal" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog" role="document">
+      <form method="post" id="myform">
+          {% csrf_token %}
+        <input type="hidden" name="cid" value="0" />
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">添加插件</h4>
+          </div>
+          <div class="modal-body" style="height: 100px;">
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" style="margin-top: 6px;">所属页面 *</label>
+                <div class="col-sm-10">
+                  {{ obj.ptl_id }}
+                </div>
+              </div>
+              <div class="form-group" style="margin-top: 20px;">
+                <label class="col-sm-2 control-label" style="margin-top: 26px;">插件模板 *</label>
+                <div class="col-sm-10"  style="margin-top: 20px;">
+                  {{ obj.plugin_id }}
+                </div>
+              </div>
+              <div class="form-group" style="margin-top: 20px;">
+                <label class="col-sm-2 control-label" style="margin-top: 26px;">权重排序</label>
+                <div class="col-sm-2"  style="margin-top: 20px;">
+                  {{ obj.weight }}
+                </div>
+                  <label class="col-sm-2 control-label" style="margin-top: 26px;">文件大小</label>
+                  <div class="col-sm-6 "  style="margin-top: 20px;">
+                  {{ obj.space }}
+                </div>
+              </div>
+              <div class="form-group" style="margin-top: 20px;">
+                <label class="col-sm-2 control-label" style="margin-top: 26px;">插件名称 *</label>
+                <div class="col-sm-10"  style="margin-top: 20px;">
+                  {{ obj.name }}
+                </div>
+              </div>
+              <div class="form-group" style="margin-top: 20px;">
+                <label class="col-sm-2 control-label" style="margin-top: 26px;">其他</label>
+                <div class="col-sm-10"  style="margin-top: 20px;">
+                  {{ obj.other }}
+                </div>
+              </div>
+              <div class="form-group" style="margin-top: 20px;">
+                <label class="col-sm-2 control-label" style="margin-top: 26px;">宽度</label>
+                <div class="col-sm-4"  style="margin-top: 20px;">
+                  {{ obj.width }}
+                </div>
+                  <label class="col-sm-2 control-label" style="margin-top: 26px;">高度</label>
+                  <div class="col-sm-4 "  style="margin-top: 20px;">
+                  {{ obj.height }}
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer" style="display: block;margin-top: 225px;">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <input type="button" id="addsave" value="保存" class="btn btn-primary">
+          </div>
+        </div><!-- /.modal-content -->
+      </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+
+     <div class="panel panel-danger">
+          <div class="panel-heading">
+            <h3 class="panel-title">警告</h3>
+          </div>
+          <div class="panel-body">
+              <p></p>
+              <h3>你确认删除此数据吗？</h3>
+              <p></p>
+          </div>
+         <div class="panel-footer">
+            <button type="button" class="btn btn-danger" id="deldata">心意已决</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal">还没想好</button>
+         </div>
+        </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('.addweb').click(function () {
+            document.getElementById("myform").reset();
+            var cid;
+            $(this).parent().parent().find("a.libtab").each(function () {
+               var status = $(this).attr("aria-expanded");
+               if (status == "true"){
+                   cid = parseInt($(this).attr("cid"));
+               }
+            });
+            $('#id_ptl_id').find("option").each(function () {
+               var val = parseInt($(this).val());
+               if (val === cid){
+                   $(this).prop("selected",true);
+               }else {
+                   $(this).prop("selected",false)
+               }
+            });
+            $('input[name="cid"]').val(0);
+        });
+
+        $('.myedit').click(function () {
+            $(this).addClass('hidden').next().removeClass('hidden');
+            var name = $(this).parent().siblings().eq(1).text();
+            $(this).parent().siblings().eq(1).html('<input class="form-control" type="text" name="name" value="'+ name+'">');
+            var plugin = $(this).parent().siblings().eq(2).text();
+            var selecthtml = $('#id_plugin_id').html();
+            $(this).parent().siblings().eq(2).html('<select class="form-control plugin" name="plugin_id">'+selecthtml +'</select>');
+            $(this).parent().siblings().eq(2).find('option').each(function () {
+                if ($(this).text() == plugin){
+                    $(this).attr('selected',true)
+                }else {
+                    $(this).attr('selected',false)
+                }
+            });
+            var width = $(this).parent().siblings().eq(3).text();
+            $(this).parent().siblings().eq(3).html('<input class="form-control " style="width: 70px" type="text" name="width" value="'+ width+'">');
+            var height = $(this).parent().siblings().eq(4).text();
+            $(this).parent().siblings().eq(4).html('<input class="form-control" style="width: 70px" type="text" name="height" value="'+ height+'">');
+            var space = $(this).parent().siblings().eq(5).text();
+            $(this).parent().siblings().eq(5).html('<input class="form-control" style="width: 100px" type="text" name="space" value="'+ space+'">');
+            var weight = $(this).parent().siblings().eq(6).text();
+            $(this).parent().siblings().eq(6).html('<input class="form-control" style="width: 50px" type="text" name="weight" value="'+ weight+'">');
+            var other = $(this).parent().siblings().eq(7).text();
+            $(this).parent().siblings().eq(7).html('<input class="form-control" style="width: 50px" type="text" name="other" value="'+ other+'">');
+        });
+
+        $('.mysave').click(function () {
+            $(this).addClass('hidden').prev().removeClass('hidden');
+            var data ={};
+            data.ptl_id = $(this).attr('ptl');
+            data.name = $(this).parent().siblings().eq(1).find('input[name="name"]').val();
+            $(this).parent().siblings().eq(1).text(data.name);
+            data.plugin_id = $(this).parent().siblings().eq(2).find('select').val();
+            var val = '';
+            $(this).parent().siblings().eq(2).find('option').each(function () {
+                var k =$(this).val();
+                if ( k == data.plugin_id ){val = $(this).text();}
+            });
+            $(this).parent().siblings().eq(2).text(val);
+            data.width = $(this).parent().siblings().eq(3).find('input[name="width"]').val();
+            $(this).parent().siblings().eq(3).text(data.width);
+            data.height = $(this).parent().siblings().eq(4).find('input[name="height"]').val();
+            $(this).parent().siblings().eq(4).text(data.height);
+            data.space = $(this).parent().siblings().eq(5).find('input[name="space"]').val();
+            $(this).parent().siblings().eq(5).text(data.space);
+            data.weight = $(this).parent().siblings().eq(6).find('input[name="weight"]').val();
+            $(this).parent().siblings().eq(6).text(data.weight);
+            data.other = $(this).parent().siblings().eq(7).find('input[name="other"]').val();
+            $(this).parent().siblings().eq(7).text(data.other);
+            data.csrf = $('input[name="csrfmiddlewaretoken"]').val();
+            data.cid = $(this).attr('cid');
+            $.ajax({
+                url:'/gitcadmin/library/index.html',
+                type:'POST',
+                dataType:'JSON',
+                data:data,
+                success:function (arg) {
+                    if (arg.status){alert('保存成功！')}else {alert('保存失败')}
+                }
+            })
+        });
+
+        $('#addsave').click(function () {
+            $.ajax({
+                url:'/gitcadmin/library/index.html',
+                type:'POST',
+                dataType:'JSON',
+                data:$('#myform').serialize(),
+                success:function (arg) {
+                    if (arg.status){
+                        location.reload();
+                    }else {
+                        alert('创建失败')
+                    }
+
+                }
+            })
+        });
+        $('.del').click(function () {
+            $('#deldata').attr('cid',$(this).attr('cid'))
+        });
+        $('#deldata').click(function () {
+            var cid = $(this).attr('cid');
+             $.ajax({
+                 url:'/gitcadmin/library/del/'+cid,
+                 type:'GET',
+                 success:function (arg) {
+                     location.reload()
+                 }
+             })
+        })
+
+    </script>
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends 'index.html' %}
+{% load maketemplates %}
+{% block title %}模板管理{% endblock %}
+
+{% block head %}{% endblock %}
+{% block css %}
+<style>
+    th{vertical-align: middle!important;text-align: center}
+    td{vertical-align: middle!important;text-align: center}
+    .red{color: red;}
+    .green{color: green;}
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+      <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <h3>模板设置 <small>用于设置可以创建的模板，创建页面会显示</small></h3>
+                  {% csrf_token %}
+              </div>
+              <div class="clearfix"></div>
+              <div class="row">
+                <div class="clearfix"></div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>所有模板列表<small style="margin-left: 20px;">
+                                <button type="button" class="btn btn-success" id="addmb" data-toggle="modal" data-target="#myModal">添加模板</button></small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <table class="table table-striped table-bordered dataTable no-footer">
+                                      <thead>
+                                        <tr>
+                                          <th>所属网站</th>
+                                          <th>模板名称</th>
+                                          <th>模板图片</th>
+                                          <th>操作</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                      {% for domain in domain_list %}
+                                          {% domain_tp domain as nub %}
+                                          {% if nub > 0 %}
+                                          {% for pt in domain.pagetemplate_set.all %}
+                                             <tr>
+                                             {% if forloop.counter == 1 %}
+                                              <th rowspan="{{ nub }}" style="vertical-align: middle;">{{ domain.name }}</th>
+                                             {% endif %}
+                                                   <td>{{ pt.name }}</td>
+                                                   <td><a href="{{ pt.img }}" target="_blank">点击预览</a></td>
+                                                   <td>
+                                                      <a href="javascript:void (0);" class="myedit" domain_id="{{ domain.id }}" cid="{{ pt.id }}">
+                                                           <i class="fa fa-edit"></i> 编辑
+                                                           <span class="text-muted"></span>
+                                                      </a>
+                                                      <a href="javascript:void (0);" class="mysave hidden" cid="{{ pt.id }}">
+                                                           <i class="fa fa-save"></i> 保存
+                                                           <span class="text-muted"></span>
+                                                      </a>
+                                                      <a href="javascript:void (0);" class="del" cid="{{ pt.id }}" data-toggle="modal" data-target=".bs-example-modal-sm">
+                                                                    <i class="fa fa-close"></i> 删除
+                                                                    <span class="text-muted"></span>
+                                                      </a>
+                                                   </td>
+                                            </tr>
+                                           {% endfor %}
+                                          {% endif %}
+                                      {% endfor %}
+                                      </tbody>
+
+                                </table>
+                            {% csrf_token %}
+                            </div>
+                            {% if obj.errors %}
+                             <div class="col-md-4 col-sm-4 col-xs-12">
+                                <div class="panel panel-danger">
+                                  <div class="panel-heading">错误提醒</div>
+                                  <div class="panel-body">
+                                    {{ obj.errors|safe }}
+                                  </div>
+                                </div>
+                             </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+      </div>
+</div>
+<div class="modal fade" tabindex="-1" id="myModal" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog" role="document">
+      <form method="post" id="myform" enctype="multipart/form-data">
+          {% csrf_token %}
+        <input type="hidden" name="cid" value="0" />
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">添加页面模板名称</h4>
+          </div>
+          <div class="modal-body" style="height: 50px;">
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" style="margin-top: 6px;">所属网站 *</label>
+                <div class="col-sm-10">
+                  {{ obj.domain_id }}
+                </div>
+              </div>
+              <div class="form-group" style="margin-top: 20px;">
+                <label class="col-sm-2 control-label" style="margin-top: 26px;">模板名称 *</label>
+                <div class="col-sm-10"  style="margin-top: 20px;">
+                  {{ obj.name }}
+                </div>
+              </div>
+              <div class="form-group" style="margin-top: 20px;">
+                <label class="col-sm-2 control-label" style="margin-top: 26px;">图片上传 *</label>
+                <div class="col-sm-10"  style="margin-top: 20px;">
+                  {{ obj.img }}
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer" style="display: block;margin-top: 125px;">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <input type="submit" value="保存" class="btn btn-primary">
+          </div>
+        </div><!-- /.modal-content -->
+      </form>
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm" role="document">
+
+     <div class="panel panel-danger">
+          <div class="panel-heading">
+            <h3 class="panel-title">警告</h3>
+          </div>
+          <div class="panel-body">
+              <p></p>
+              <h3>你确认删除此数据吗？</h3>
+              <p></p>
+          </div>
+         <div class="panel-footer">
+            <button type="button" class="btn btn-danger" id="deldata">心意已决</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal">还没想好</button>
+
+         </div>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}
+{% block js %}
+<script>
+    $('#addmb').click(function () {
+       document.getElementById("myform").reset();
+       $('input[name="cid"]').val('');
+    });
+
+    $('.myedit').click(function () {
+        var domain_id = $(this).attr('domain_id');
+        var cid = $(this).attr('cid');
+        $('input[name="cid"]').val(cid);
+        var name = $(this).parent().prev().prev().text();
+        $('#id_domain_id').find('option').each(function () {
+            var k = $(this).val();
+            if (k == domain_id){
+                 $(this).attr('selected',true)
+            }else {
+                 $(this).attr('selected',false)
+            }
+        });
+        $('#id_name').val(name);
+        $('#myModal').modal('show');
+    });
+
+    $('.del').click(function () {
+            $('#deldata').attr('cid',$(this).attr('cid'))
+        });
+
+    $('#deldata').click(function () {
+            var cid = $(this).attr('cid');
+             $.ajax({
+                 url:'/gitcadmin/template/del/'+cid,
+                 type:'GET',
+                 success:function (arg) {
+                     location.reload()
+                 }
+             })
+        })
+
+</script>
+{% endblock %}
